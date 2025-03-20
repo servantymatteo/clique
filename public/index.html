@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Compteur de clics partagé</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        padding-top: 50px;
+        background-color: #f4f4f4;
+      }
+      #counter {
+        font-size: 3em;
+        margin-bottom: 20px;
+        color: #333;
+      }
+      button {
+        font-size: 1.5em;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #0056b3;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Compteur de blague</h1>
+    <div id="counter">0</div>
+    <button id="clickButton">Cliquez ici !</button>
+
+    <script>
+      const counterElem = document.getElementById("counter");
+      const button = document.getElementById("clickButton");
+
+      // Fonction pour récupérer la valeur actuelle du compteur
+      async function fetchCounter() {
+        const response = await fetch("/counter");
+        const data = await response.json();
+        counterElem.textContent = data.counter;
+      }
+
+      // Fonction pour incrémenter le compteur
+      async function incrementCounter() {
+        const response = await fetch("/counter/increment", { method: "POST" });
+        const data = await response.json();
+        counterElem.textContent = data.counter;
+      }
+
+      // Récupérer le compteur initial lors du chargement de la page
+      fetchCounter();
+
+      // Incrémenter le compteur lors du clic
+      button.addEventListener("click", () => {
+        incrementCounter();
+      });
+
+      // Optionnel : rafraîchir le compteur toutes les 5 secondes pour afficher les mises à jour en temps réel
+      setInterval(fetchCounter, 5000);
+    </script>
+  </body>
+</html>
